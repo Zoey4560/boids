@@ -1,5 +1,14 @@
 export class Vector {
 	// 2D vector helper class
+	// Relative to canvas x,y (+y is "down"/SOUTH)
+	// Rotated so that 0 rad => NORTH FIXME?
+
+	static NORTH = () => new Vector([0, -1])
+	static SOUTH = () => new Vector([0, 1])
+	static EAST = () => new Vector([1, 0])
+	static WEST = () => new Vector([-1, 0])
+	static ZERO = () => new Vector()
+
 	constructor(param) {
 		this.x = 0
 		this.y = 0
@@ -27,6 +36,13 @@ export class Vector {
 		return this
 	}
 
+	get radians() {
+		return Math.atan2(this.y, this.x) + Math.PI / 2
+		// + PI to shift to NORTH => 0 rad
+		//FIXME atan2(0,0) => 0   --   should be NaN?
+		//      will cause ZERO.radians == EAST.radians
+	}
+
 	rotate(r){
 		return this._set([
 			this.x * Math.cos(r) - this.y * Math.sin(r),
@@ -47,7 +63,7 @@ export class Vector {
 	}
 
 	static averageVectors(lst) {
-			let sum = lst.reduce((acc, v) => acc.add(v), new this())
+			let sum = lst.reduce((acc, v) => acc.add(v), this.ZERO())
 			return sum.divide(lst.length)
 	}
 }
