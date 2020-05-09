@@ -18,7 +18,6 @@ export default class Boids {
 	}
 
 	startSimulation() {
-		console.log(this)
 		clearInterval(this._simulationTimer)
 		this._simulationTimer = setInterval(
 			this.stepSimulation.bind(this), 1

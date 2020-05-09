@@ -1,7 +1,7 @@
 import Boids from './boids.js'
 import {rotate} from './helpers.js'
 
-let resizeTimer, animationTimer
+let resizeTimer, animationFrame
 
 let canvas = document.querySelector('canvas')
 let ctx = canvas.getContext('2d')
@@ -22,18 +22,17 @@ function resizeCanvas() {
 }
 
 function start() {
-	window.clearInterval(animationTimer)
+	window.cancelAnimationFrame(animationFrame)
 	let boids = new Boids(width, height, 100)
 	canvas.width = width
 	canvas.height = height
-	animationTimer = window.setInterval(() => {
-		drawFrame()
-	}, 10)
+	animationFrame = window.requestAnimationFrame(drawFrame)
 
 
 	function drawFrame() {
 		ctx.clearRect(0, 0, width, height)
 		boids.boids.forEach(drawBoid)
+		animationFrame = window.requestAnimationFrame(drawFrame)
 	}
 
 	function drawBoid(boid) {
