@@ -1,0 +1,14 @@
+{
+  "name": "boids",
+  "version": "1.0.0",
+  "description": "HTML 5 Canvas and JS Boids implementation",
+  "main": "src/boids.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Zech Williams",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
