@@ -1,5 +1,5 @@
 import Boids from './boids.js'
-import {rotate} from './helpers.js'
+import {Vector} from './helpers.js'
 
 let resizeTimer, animationFrame
 
@@ -38,14 +38,15 @@ function start() {
 	function drawBoid(boid) {
 		let w = 10
 		let h = 30
+
+		let top = new Vector([0, -0.5 * h]).rotate(boid.rot)
+		let r = new Vector([0.5 * w, 0.5 * h]).rotate(boid.rot)
+		let l = new Vector([-0.5 * w, 0.5 * h]).rotate(boid.rot)
+
 		ctx.beginPath();
-		let top = rotate(0, -0.5 * h, boid.rot)
-		let r = rotate(0.5 * w, 0.5 * h, boid.rot)
-		let l = rotate(-0.5 * w, 0.5 * h, boid.rot)
-		// console.log(top, r, l)
-		ctx.moveTo(boid.locX + top[0], boid.locY + top[1])
-		ctx.lineTo(boid.locX + r[0], boid.locY + r[1])
-		ctx.lineTo(boid.locX + l[0], boid.locY + l[1])
+		ctx.moveTo(boid.locX + top.x, boid.locY + top.y)
+		ctx.lineTo(boid.locX + r.x, boid.locY + r.y)
+		ctx.lineTo(boid.locX + l.x, boid.locY + l.y)
 		ctx.fill()
 	}
 }
