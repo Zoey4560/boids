@@ -8,6 +8,7 @@ export class Vector {
 	static EAST = () => new Vector([1, 0])
 	static WEST = () => new Vector([-1, 0])
 	static ZERO = () => new Vector()
+	static RANDOM = () => new Vector([Math.random() * 2 - 1, Math.random() * 2 - 1])
 
 	constructor(param) {
 		this.x = 0
@@ -20,9 +21,8 @@ export class Vector {
 	_set(param) {
 		if (typeof(param) == 'number') {
 			// Expecting theta radians
-			//TODO North relative?
-			this.x = Math.cos(param)
-			this.y = Math.sin(param)
+			this.x = Math.cos(param - Math.PI / 2)
+			this.y = Math.sin(param - Math.PI / 2)
 		}
 		else if (typeof(param) == 'object') {
 			// Expecting [x,y]
@@ -56,10 +56,27 @@ export class Vector {
 		return this
 	}
 
+	subtract(v){
+		this.x -= v.x
+		this.y -= v.y
+		return this
+	}
+
 	divide(n) {
 		this.x /= n
 		this.y /= n
 		return this
+	}
+
+	static radiansBetween(v1, v2) {
+		let rad = v2.radians - v1.radians
+		if (rad > Math.PI) {
+			rad -= 2 * Math.PI
+		}
+		if (rad < -Math.PI) {
+			rad += 2 * Math.PI
+		}
+		return rad
 	}
 
 	static averageVectors(lst) {

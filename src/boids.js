@@ -2,6 +2,7 @@ import {Vector} from './helpers.js'
 
 export default class Boids {
 	/* Container for grouping of boids/flock */
+	simulationTickDelay = 1
 	constructor(width, height, count) {
 		this._simulationTimer = null
 		this.width = width
@@ -22,7 +23,7 @@ export default class Boids {
 	startSimulation() {
 		clearInterval(this._simulationTimer)
 		this._simulationTimer = setInterval(
-			this.stepSimulation.bind(this), 1
+			this.stepSimulation.bind(this), this.simulationTickDelay
 		)
 	}
 
@@ -53,21 +54,24 @@ export default class Boids {
 			// Cohesion
 
 
-			// test - circling
-			//boid.rot = (boid.rot + 0.01) % (Math.PI * 2)
 
+			let averageVector
 			if (desiredVectors.length > 0) {
-				let averageVector = Vector.averageVectors(desiredVectors)
-				boid.rot = averageVector.radians
+				averageVector = Vector.averageVectors(desiredVectors)
 			}
-
+			else {
+				// averageVector = Vector.RANDOM()
+				// averageVector = boid.vector.rotate(0.01)
+				averageVector = boid.vector
+			}
+			let desiredSteer = Vector.radiansBetween(boid.vector, averageVector)
+			let allowedSteerMagnitude = Math.min(
+				Math.abs(desiredSteer),
+				boid.getConfig('rotSpeed')
+			)
+			boid.rot += Math.sign(desiredSteer) * allowedSteerMagnitude
 
 			if (boid.getConfig('debug')) {
-				console.log('-')
-				console.log(boid.rot)
-				console.log(desiredVectors)
-				console.log(Vector.averageVectors(desiredVectors))
-				console.log('-')
 				debugger;
 			}
 
@@ -99,6 +103,10 @@ class Boid {
 				'rotSpeed': 0.05,
 			}
 		}
+	}
+
+	get vector() {
+		return new Vector(this.rot)
 	}
 
 	// TODO: member specific overrides; if needed
