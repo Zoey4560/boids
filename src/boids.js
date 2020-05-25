@@ -10,8 +10,8 @@ export default class Boids {
 		this.boids = []
 		for (let i=0; i < count; i++) {
 			this.boids.push(new Boid(
-				Math.random() * width,
-				Math.random() * height,
+				(Math.random() * (width - 2*50)) + 50,
+				(Math.random() * (height - 2*50)) + 50,
 				Math.random() * Math.PI * 2 //in radians
 			))
 		}
@@ -30,6 +30,7 @@ export default class Boids {
 	stepSimulation() {
 		this.boids.forEach(boid => {
 			let desiredVectors = []
+
 			// Avoid walls
 			let padding = 0.1 * Math.min(this.width, this.height)
 			if (boid.locX < padding) { //Left
@@ -45,8 +46,6 @@ export default class Boids {
 				desiredVectors.push(Vector.NORTH())
 			}
 
-
-
 			// Separation
 
 			// Alignment
@@ -55,16 +54,18 @@ export default class Boids {
 
 
 
-			let averageVector
+			let averageDesire
 			if (desiredVectors.length > 0) {
-				averageVector = Vector.averageVectors(desiredVectors)
+				averageDesire = Vector.averageVectors(desiredVectors)
 			}
 			else {
-				// averageVector = Vector.RANDOM()
-				// averageVector = boid.vector.rotate(0.01)
-				averageVector = boid.vector
+				//default behavior
+				// averageDesire = Vector.RANDOM()
+				// averageDesire = boid.vector.rotate(0.01)
+				averageDesire = boid.vector
 			}
-			let desiredSteer = Vector.radiansBetween(boid.vector, averageVector)
+			//steer towards desire
+			let desiredSteer = Vector.radiansBetween(boid.vector, averageDesire)
 			let allowedSteerMagnitude = Math.min(
 				Math.abs(desiredSteer),
 				boid.getConfig('rotSpeed')
