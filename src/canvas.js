@@ -1,7 +1,7 @@
 import Boids from './boids.js'
 import {Vector} from './helpers.js'
 
-const count = 100
+const count = 500
 
 let resizeTimer, animationFrame
 
@@ -28,12 +28,23 @@ function start() {
 	let boids = new Boids(width, height, count)
 	canvas.width = width
 	canvas.height = height
+	let frameTimes = [Date.now()]
 	animationFrame = window.requestAnimationFrame(drawFrame)
 
 
 	function drawFrame() {
 		ctx.clearRect(0, 0, width, height)
 		boids.boids.forEach(drawBoid)
+
+		frameTimes.push(Date.now())
+		let frameTimeSum = frameTimes.slice(1).reduce((acc, cur, i) => {
+			return acc + cur - frameTimes[i]
+		}, 0)
+		ctx.fillText(Math.round(frameTimeSum/frameTimes.length), 20, 20)
+		if (frameTimes.length > 10) {
+			frameTimes.shift()
+		}
+
 		animationFrame = window.requestAnimationFrame(drawFrame)
 	}
 
