@@ -1,7 +1,7 @@
 import Boids from './boids.js'
 import {Vector} from './helpers.js'
 
-const count = 500
+const count = 100
 
 let resizeTimer, animationFrame
 
@@ -36,14 +36,19 @@ function start() {
 		ctx.clearRect(0, 0, width, height)
 		boids.boids.forEach(drawBoid)
 
+		//draw animation fps
 		frameTimes.push(Date.now())
-		let frameTimeSum = frameTimes.slice(1).reduce((acc, cur, i) => {
-			return acc + cur - frameTimes[i]
-		}, 0)
-		ctx.fillText(Math.round(frameTimeSum/frameTimes.length), 20, 20)
 		if (frameTimes.length > 10) {
 			frameTimes.shift()
 		}
+		let frameTimeSum = frameTimes.slice(1).reduce((acc, cur, i) => {
+			return acc + cur - frameTimes[i]
+		}, 0)
+		//draw simulation fps
+		let simFrameTime = boids.getFrameTime()
+		//
+		let str = String(Math.round(frameTimeSum/frameTimes.length)) + ':' + String(Math.round(simFrameTime))
+		ctx.fillText(str, 20, 20)
 
 		animationFrame = window.requestAnimationFrame(drawFrame)
 	}
@@ -62,5 +67,10 @@ function start() {
 		ctx.lineTo(boid.locX + r.x, boid.locY + r.y)
 		ctx.lineTo(boid.locX + l.x, boid.locY + l.y)
 		ctx.fill()
+
+		//DEBUG draw vision circle
+		// ctx.beginPath()
+		// ctx.arc(boid.locX, boid.locY, boids.config.visionRange, 0, 360)
+		// ctx.stroke()
 	}
 }

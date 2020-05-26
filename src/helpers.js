@@ -20,7 +20,7 @@ export class Vector {
 
 	_set(param) {
 		if (typeof(param) == 'number') {
-			// Expecting theta radians
+			// Expecting theta radians (relative to NORTH)
 			this.x = Math.cos(param - Math.PI / 2)
 			this.y = Math.sin(param - Math.PI / 2)
 		}
@@ -43,6 +43,14 @@ export class Vector {
 		//      will cause ZERO.radians == EAST.radians
 	}
 
+	get magnitude() {
+		return Math.sqrt(this.x ** 2 + this.y ** 2)
+	}
+
+	normalize() {
+		return this.divide(this.magnitude)
+	}
+
 	rotate(r){
 		return this._set([
 			this.x * Math.cos(r) - this.y * Math.sin(r),
@@ -59,6 +67,12 @@ export class Vector {
 	subtract(v){
 		this.x -= v.x
 		this.y -= v.y
+		return this
+	}
+
+	multiply(n) {
+		this.x *= n
+		this.y *= n
 		return this
 	}
 
