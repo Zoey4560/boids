@@ -9,6 +9,6 @@
   "author": "Zech Williams",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.17.1"
+    "express": "^4.17.3"
   }
 }
